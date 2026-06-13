@@ -1,0 +1,12 @@
+{
+  "mode": "auto",
+  "services": ["youtube", "discord", "telegram", "twitch", "github"],
+  "interface": "auto",
+  "fake_sni": true,
+  "disorder": 2,
+  "fragment_size": 4,
+  "ttl_trick": true,
+  "log_level": "info",
+  "log_file": "zapret.log",
+  "autostart": false
+}

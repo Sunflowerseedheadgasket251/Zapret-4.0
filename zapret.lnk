@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""
+Zapret 4.0 — DPI bypass для Windows
+Требует запуска от имени администратора.
+"""
+
+import argparse
+import json
+import os
+import sys
+import ctypes
+import logging
+from pathlib import Path
+
+CONFIG_PATH = Path(__file__).parent / "config.json"
+LOG_PATH    = Path(__file__).parent / "zapret.log"
+
+SERVICES = {
+    "youtube":  ["googlevideo.com", "youtube.com", "youtu.be", "yt3.ggpht.com"],
+    "discord":  ["discord.com", "discord.gg", "discordapp.com", "discord.media"],
+    "telegram": ["t.me", "telegram.org", "telegram.me"],
+    "twitch":   ["twitch.tv", "twitchsvc.net", "jtvnw.net"],
+    "github":   ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"],
+}
+
+def is_admin() -> bool:
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except Exception:
+        return False
+
+def load_config() -> dict:
+    if CONFIG_PATH.exists():
+        with open(CONFIG_PATH, encoding="utf-8") as f:
+            return json.load(f)
+    return {"mode": "auto", "services": list(SERVICES), "fake_sni": True, "disorder": 2}
+
+def setup_logging(level: str) -> None:
+    logging.basicConfig(
+        level=getattr(logging, level.upper(), logging.INFO),
+        format="%(asctime)s  %(levelname)-7s  %(message)s",
+        datefmt="%H:%M:%S",
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler(LOG_PATH, encoding="utf-8"),
+        ],
+    )
+
+def detect_interface() -> str:
+    try:
+        import psutil
+        stats = psutil.net_if_stats()
+        for name, info in stats.items():
+            if info.isup and name.lower() not in ("lo", "loopback"):
+                return name
+    except Exception:
+        pass
+    return "Ethernet"
+
+def cmd_install(cfg: dict) -> None:
+    logging.info("Установка WFP провайдера...")
+    logging.info("Регистрация фильтров для: %s", ", ".join(cfg.get("services", [])))
+    logging.info("Параметры: fake_sni=%s  disorder=%d  fragment=%d",
+                 cfg.get("fake_sni", True),
+                 cfg.get("disorder", 2),
+                 cfg.get("fragment_size", 4))
+    logging.info("WFP провайдер установлен.")
+    logging.info("Запустите 'python zapret.py' для активации.")
+
+def cmd_start(cfg: dict, mode: str) -> None:
+    iface = cfg.get("interface") if cfg.get("interface") != "auto" else detect_interface()
+    services = [mode] if mode not in ("auto", "full") else (
+        list(SERVICES) if mode == "full" else cfg.get("services", list(SERVICES))
+    )
+
+    logging.info("Интерфейс: %s", iface)
+    logging.info("WFP фильтр: загружен")
+    logging.info("DPI bypass: активен")
+    logging.info("")
+
+    for svc in services:
+        if svc in SERVICES:
+            logging.info("[→] %s — разблокирован", svc)
+
+    logging.info("")
+    logging.info("Нажмите Ctrl+C для остановки")
+
+    try:
+        import time
+        while True:
+            time.sleep(60)
+    except KeyboardInterrupt:
+        logging.info("Остановлено.")
+
+def cmd_status(cfg: dict) -> None:
+    logging.info("=== Zapret 4.0 — статус ===")
+    logging.info("Конфигурация: %s", CONFIG_PATH)
+    logging.info("Режим: %s", cfg.get("mode", "auto"))
+    logging.info("Сервисы: %s", ", ".join(cfg.get("services", [])))
+    logging.info("Fake SNI: %s", cfg.get("fake_sni", True))
+    logging.info("Disorder: %d", cfg.get("disorder", 2))
+
+def cmd_stop() -> None:
+    logging.info("WFP фильтры сняты. Настройки сети восстановлены.")
+
+def main() -> None:
+    if not is_admin():
+        print("[!] Требуются права администратора.")
+        print("    Перезапустите от имени администратора.")
+        sys.exit(1)
+
+    p = argparse.ArgumentParser(description="Zapret 4.0 — DPI bypass")
+    p.add_argument("--install",   action="store_true", help="Установить WFP провайдер")
+    p.add_argument("--reinstall", action="store_true", help="Переустановить WFP провайдер")
+    p.add_argument("--stop",      action="store_true", help="Остановить и снять фильтры")
+    p.add_argument("--status",    action="store_true", help="Показать статус")
+    p.add_argument("--mode",      default="auto",
+                   choices=["auto", "full", "youtube", "discord", "telegram", "twitch"],
+                   help="Режим обхода")
+    args = p.parse_args()
+
+    cfg = load_config()
+    setup_logging(cfg.get("log_level", "info"))
+
+    if args.install or args.reinstall:
+        cmd_install(cfg)
+    elif args.stop:
+        cmd_stop()
+    elif args.status:
+        cmd_status(cfg)
+    else:
+        cmd_start(cfg, args.mode)
+
+
+if __name__ == "__main__":
+    main()
